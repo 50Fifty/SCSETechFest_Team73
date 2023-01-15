@@ -8,6 +8,9 @@
     <link href="../static/css/fonts.css" rel="stylesheet">
     <link href="../static/css/style.css" rel="stylesheet">
 
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
   </head>
   <body>
     <div id="top" style="text-align: center;">
@@ -42,17 +45,22 @@
       <div id="survey-container">
         Survey
       </div>
+      <button onclick="getQuestion()">Click me</button>
       
     </div>
 
     <script>
       function getQuestion() {
         $.ajax({
-          type: "GET",
+          type: "POST",
           url: "/api/getQuestion",
-          data: "id=" + id,
+          // data: "id=" + id,
+          dataType: "json",
           success: function(data) {
-            $('#summary').html(data);
+            $('#survey-container').text(data.question)
+          },
+          error: function (req, status, err) {
+            console.log('Something went wrong', status, err);
           }
         });
       }
