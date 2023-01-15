@@ -44,5 +44,18 @@
       </div>
       
     </div>
+
+    <script>
+      function getQuestion() {
+        $.ajax({
+          type: "GET",
+          url: "/api/getQuestion",
+          data: "id=" + id,
+          success: function(data) {
+            $('#summary').html(data);
+          }
+        });
+      }
+    </script>
   </body>
 </html>
