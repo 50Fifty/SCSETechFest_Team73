@@ -1,3 +1,7 @@
+* {
+  color: seashell;
+}
+
 #top {
   background-color: #2d2d2d;
   padding: 10px;
@@ -26,7 +30,7 @@ h2 {
   margin: 0;
   letter-spacing: .05em; /* Adjust as needed */
   animation: 
-    typing 2.5s steps(30, end),
+    typing 2s steps(20, end),
     blink-caret .75s step-end infinite;
 }
 
@@ -46,10 +50,73 @@ body {
   background-color: #1e1e1e;
 }
 
-#main {
+div#main div {
+  display: inline-block;
+}
+
+#one-liner, #intro {
+  width: 100%;
+  margin-top: 40px;
+  color: seashell;
   text-align: center;
 }
 
-div#main div {
+#changing-keywords{
+  vertical-align: top;
+  overflow: hidden;
+  height: 40px;
+  position: relative;
   display: inline-block;
+  width: 360px;
+  text-align: left;
+}
+.hidden{
+  position: absolute;
+  top: 20px;
+  display: inline-block;
+  width: 360px;
+  opacity: 0;
+  animation: slideme 12s infinite;
+}
+
+.hidden:nth-child(3){
+  animation-delay: 2s;
+}
+.hidden:nth-child(5){
+  animation-delay: 4s;
+}
+.hidden:nth-child(7){
+  animation-delay: 6s;
+}
+.hidden:nth-child(9){
+  animation-delay: 8s;
+} 
+.hidden:nth-child(11){
+  animation-delay: 10s;
+} 
+
+@keyframes slideme {
+  0% {
+    top: 20px;
+    opacity:0;
+  }
+  5% {
+    top: 0px;
+    opacity:1;
+  }
+  10%{
+    top : 0;
+    opacity:1;
+  }
+  15% {
+    opacity: 0;
+  }
+  20%{
+    top: 20px;
+    opacity:0;
+  }
+}
+
+#survey-container {
+  border: solid 1px red;
 }
