@@ -70,9 +70,13 @@
     </div>
 
     <script>
-    $( document ).ready(function() {
-        var type = "valuefromurl"
 
+      let param = null;
+    $( document ).ready(function() {
+        // var type = "valuefromurl"
+        let searchParams = new URLSearchParams(window.location.search)
+        param = searchParams.get('type')
+        console.log(param)
     });
 
       function firstVisit() {
@@ -113,10 +117,17 @@
             if (data.completed == true) {
               $(".overlay").show();
               $(".loader").show();
-              window.location.replace("/result");
+              if (param == "predict") {
+                window.location.replace("/result");
+
+              }
+              else {
+                window.location.replace("/guess");
             }
+
           }
-        })
+        }
+      })
 
         // 2. Get next question
         $("#body-container").fadeOut(function() {
