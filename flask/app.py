@@ -19,41 +19,106 @@ questionTable = question()
 userAnsTable = userAns()
 mlTable = ml()
 
-def updateML():
-    ansJson =  {
-    "1": 1,
-    "2": 1,
-    "3": 1,
-    "4": 1,
-    "5": 0,
-    "6": 1,
-    "7": 1,
-    "8": 1,
-    "9": 1,
-    "10": 1,
-    "11": 1,
-    "12": 1,
-    "13": 1,
-    "14": 1,
-    "15": 1,
-    "16": 1,
-    "17": 1,
-    "18": 1,
-    "19": 1,
-    "20": 1
-  }
-    role = "Frontend"
+def getWeight(ansJson, index):
+    
+    if (ansJson.get(index)):
+        return ansJson[index]
+    else:
+        return 0.5
 
+def createNewRole(ansJson, role):
+    data= {
+  "role": role,
+  "answer": {
+        "1": {
+        "weight": getWeight(ansJson, "1"),
+        "times": 0
+        },
+        "2": {
+        "weight": getWeight(ansJson, "2"),
+        "times": 0
+        },
+        "3": {
+        "weight": getWeight(ansJson, "3"),
+        "times": 0
+        },
+        "4": {
+        "weight": getWeight(ansJson, "4"),
+        "times": 0
+        },
+        "5": {
+        "weight": getWeight(ansJson, "5"),
+        "times": 0
+        },
+        "6": {
+        "weight": getWeight(ansJson, "6"),
+        "times": 0
+        },
+        "7": {
+        "weight": getWeight(ansJson, "7"),
+        "times": 0
+        },
+        "8": {
+        "weight": getWeight(ansJson, "8"),
+        "times": 0
+        },
+        "9": {
+        "weight": getWeight(ansJson, "9"),
+        "times": 0
+        },
+        "10": {
+        "weight": getWeight(ansJson, "10"),
+        "times": 0
+        },
+        "11": {
+        "weight": getWeight(ansJson, "11"),
+        "times": 0
+        },
+        "12": {
+        "weight": getWeight(ansJson, "12"),
+        "times": 0
+        },
+        "13": {
+        "weight": getWeight(ansJson, "13"),
+        "times": 0
+        },
+        "14": {
+        "weight": getWeight(ansJson, "14"),
+        "times": 0
+        },
+        "15": {
+        "weight": getWeight(ansJson, "15"),
+        "times": 0
+        },
+        "16": {
+        "weight": getWeight(ansJson, "16"),
+        "times": 0
+        },
+        "17": {
+        "weight": getWeight(ansJson, "17"),
+        "times": 0
+        },
+        "18": {
+        "weight": getWeight(ansJson, "18"),
+        "times": 0
+        }
+    }
+    }
+    mlTable.create(data)
+
+def updateML(ansJson, role):
     currentWeight = mlTable.get2(role)
     print(currentWeight)
-    for ans in ansJson:
-        currentWeight['answer'][ans]['times'] += 1
-        if(ansJson[ans] != currentWeight['answer'][ans]['weight']):
-            currentWeight['answer'][ans]['weight'] = (ansJson[ans] + currentWeight['answer'][ans]['weight']) / (currentWeight['answer'][ans]['times'] + 1)
-        
-    mlTable.put(role , currentWeight['answer'])
+    if (currentWeight == None):
+        createNewRole(ansJson, role)
+    else:
+        for ans in ansJson:
+            currentWeight['answer'][ans]['times'] += 1
+            if(ansJson[ans] != currentWeight['answer'][ans]['weight']):
+                currentWeight['answer'][ans]['weight'] = (ansJson[ans] + currentWeight['answer'][ans]['weight']) / (currentWeight['answer'][ans]['times'] + 1)
+            
+        mlTable.put(role , currentWeight['answer'])
 
-# updateML()
 
 @app.route("/")
 def homepage():
@@ -161,6 +226,23 @@ def receiveAnswer():
     else:
         print("inside")
         return ("Invalid parameters", 400)
+
+@app.route("/api/updateModel", methods=["POST"])
+def updateModel():
+    """
+    """
+    print(request.get_json())
+    
+    questions_so_far = [int(x) for x in list(session["answers"].keys())]
+    answers_so_far = [int(x) for x in list(session["answers"].values())]
+    ansJson = dict()
+    for key, value in session["answers"].items():
+        ansJson[(key)] = int(value)
+    print(ansJson)
+
+    updateML(ansJson, request.get_json()["role"])
+
+    return "success"
 
 if __name__ == "__main__":
     app.run()
