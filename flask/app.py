@@ -252,7 +252,12 @@ def updateModel():
 
     updateML(ansJson, request.get_json()["role"])
 
-    return "success"
+    response = Response(
+        response=json.dumps({}),
+        mimetype="application/json",
+        status=200
+    )
+    return response
 
 if __name__ == "__main__":
     app.run()
