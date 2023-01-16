@@ -99,6 +99,7 @@ def index():
         print(answers_so_far)
         print(result)
         #if yes update db
+        #return render_template('index.html', result=result['name'])
     else:
         next_question = random.choice(questions_left)
         #return render_template('index.html', question=next_question, question_text=questions[next_question])
