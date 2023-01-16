@@ -43,11 +43,13 @@
           $( document ).ready(function() {
 
     $('#guessbutton').click(function(e) {  
-      window.location.replace("/predict");
+      var pageType = "guess"
+      window.location.replace("/predict?type="+pageType);
     });
 
-    $('#predictbutton').click(function(e) {  
-      window.location.replace("/predict");
+    $('#predictbutton').click(function(e) {
+      var pageType = "predict"  
+      window.location.replace("/predict?type="+pageType);
 
     });
 

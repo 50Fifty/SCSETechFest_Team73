@@ -45,7 +45,10 @@
 
 <script>
     $( document ).ready(function() {
-    console.log( "ready!" );
+    // console.log( "ready!" );
+    let searchParams = new URLSearchParams(window.location.search)
+    let param = searchParams.get('type')
+    console.log(param)
 
     $('#yes').click(function(e) {  
       //handle yes, redirect to homepage?
