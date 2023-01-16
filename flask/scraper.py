@@ -43,7 +43,7 @@ def get_page_number(keyword):
     page_number = math.ceil(result/30)
     
     #Returns total number of pages
-    return page_number
+    return 1
 
 def job_page_scraper(link):
 
@@ -118,7 +118,7 @@ def page_crawler(keyword):
  
     jobs = []
 
-    for link in job_links:
+    for link in job_links[0:4]:
         job_link = link['href'].strip().split('?', 1)[0]
         jobs.append(job_page_scraper(job_link))
     
