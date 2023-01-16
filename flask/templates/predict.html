@@ -66,10 +66,16 @@
     </div>
 
     <script>
+    $( document ).ready(function() {
+        var type = "valuefromurl"
+
+    });
+
       function firstVisit() {
         localStorage.clear();
         nextQuestion();
       }
+      
 
       function nextQuestion() {
         if ("questionID" in localStorage) {

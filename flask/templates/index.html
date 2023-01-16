@@ -25,12 +25,12 @@
         <div style="text-align: center; width: 100%; margin-top: 10%; display: flex; flex-direction: row;">
             <div style="display: block; flex-basis: 100%;">
                 <div style="display: block; margin-bottom: 20px;"><h2 style="font-weight: bold;">Click this if you are a employee</h2></div>
-                <button class="glow-on-hover" style="padding: 40px 30px; width: 50%;" type="button">Can we guess your current career?</button>
+                <button id="guessbutton" class="glow-on-hover" style="padding: 40px 30px; width: 50%;" type="button">Can we guess your current career?</button>
                     
             </div>
             <div style="display: block; flex-basis: 100%;">
                 <div style="display: block; margin-bottom: 20px; font-weight: bold;"><h2 style="font-weight: bold;">Click this if you are aspiring job</h2></div>
-                <button class="glow-on-hover" type="button" style="padding: 40px 30px; width: 50%;">Let us decide your career.</button>
+                <button id="predictbutton" class="glow-on-hover" type="button" style="padding: 40px 30px; width: 50%;">Let us decide your career.</button>
     
                     
             </div>
@@ -40,57 +40,18 @@
     </div>
 
     <script>
-      function firstVisit() {
-        localStorage.clear();
-        nextQuestion();
-      }
+          $( document ).ready(function() {
 
-      function nextQuestion() {
-        if ("questionID" in localStorage) {
+    $('#guessbutton').click(function(e) {  
+      window.location.replace("/predict");
+    });
 
-          // 1. Submit current answer
-          var jsonBody = {
-            "question" : String(document.getElementById("question").textContent),
-            "answer" : String(document.querySelector('input[name="flexRadioDefault"]:checked').value)
-          }
+    $('#predictbutton').click(function(e) {  
+      window.location.replace("/predict");
 
-          $.ajax({
-            type: "POST",
-            url: "/api/receiveAnswer",
-            dataType: "json",
-            data: JSON.stringify(jsonBody),
-            contentType: "application/json; charset=utf-8",
-            success: function(data) {
-              console.log(data.success);
-            }
-          })
-        }
+    });
 
-        // 2. Get next question
-        $("#body-container").fadeOut(function() {
-
-          $.ajax({
-            type: "POST",
-            url: "/api/getQuestion",
-            // data: "id=" + id,
-            dataType: "json",
-            success: function(data) {
-              $('#question').text(data.question);
-              localStorage.setItem("questionID", data.questionID);
-            },
-            error: function (req, status, err) {
-              console.log('Something went wrong', status, err);
-            }
-          });
-        });
-
-        // console.log("question id: " + localStorage.getItem("questionID"));
-        $("#body-container").fadeIn();
-      }
-        
-      function printToConsole() {
-        console.log("test");
-      }
+  });
     </script>
   </body>
 </html>

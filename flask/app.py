@@ -11,8 +11,9 @@ from scraper import scraper
 #x = scraper("ux frontend developer dbs")
 #print(x)
 
-
 app = Flask(__name__)
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
 app.secret_key = 'ABCDEFG'
 questionTable = question()
 userAnsTable = userAns()
@@ -56,12 +57,12 @@ def updateML():
 
 @app.route("/")
 def homepage():
-
+    session.clear()
     return render_template("index.html")
 
 @app.route("/predict")
 def predictpage():
-    session.clear()
+    # session.clear()
     # session["QID"] = str(1)
     session["qBank"] = [str(x) for x in range(1, len(questionTable.get()["questions"])+1)]
     session["answers"] = dict()
