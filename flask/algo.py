@@ -1,43 +1,105 @@
-from sklearn import tree
-import pickle
-
-# Training data
-# [Backend or Frontend, Coding Logic, Coding Design, Coding Mobile, Manage Team, Analyse Data]
-X = [[1, 1, 1, 0, 0, 0],
-     [1, 1, 0, 0, 0, 0],
-     [0,0,1,0,0,0],
-     [0,1,1,1,0,0],
-     [1,0,0,0,1,1],
-     [1,1,0,0,0,1]]
-
-# Animal labels
-# ['mammal', 'mammal', 'bird', 'bird', 'fish', 'fish']
-Y = ['fullStackDev', 'backEndDev', 'frontEndDev', 'MobileDev', 'DevOps', 'DataScientist']
+import json
+from MongoDB.question import question
+from MongoDB.userAns import userAns
+from MongoDB.ml import ml
+from test_questions import Sample
+import random
+import numpy as np
 
 
-# Initialize and train the classifier
-clf = tree.DecisionTreeClassifier()
-clf = clf.partial_fit(X, Y)
-
-# # Test data
-# # [Backend or Frontend, Coding Logic, Coding Design, Coding Mobile, Manage Team, Analyse Data]
-X_test = [[0,1,1,0,0,1]]
-
-# # Predict the class of the test data
-# prediction = clf.predict(X_test)
-# print("Predicted class: ", prediction)
+mlTable = ml()
 
 
+roles = []
+
+def loadRoles():
+    x = mlTable.get()
+    
+    for weights in x:
+        roles.append(weights)
+
+loadRoles()
+
+# characters = [
+#     {'name': 'Homer Simpson',         'answers': {1: 1, 2: 1, 3: 1, 4: 0}},
+#     {'name': 'SpongeBob SquarePants', 'answers': {1: 1, 2: 1, 3: 1, 4: 0.75}},
+#     {'name': 'Sandy Cheeks',          'answers': {1: 0, 2: 0, 3: 0}},
+# ]
+# print(characters["name"])
+
+questions = {
+    1: 'Is your character yellow?',
+    2: 'Is your character bald?',
+    3: 'Is your character a man?',
+    4: 'Is your character short?',
+}
+
+questions_so_far = []
+answers_so_far = []
 
 
+def calculate_probabilites(questions_so_far, answers_so_far):
+    probabilities = []
+    for role in roles:
+        probabilities.append({
+            'name': role['role'], #edited
+            'probability': calculate_character_probability(role, questions_so_far, answers_so_far)
+        })
 
-# # save the model to disk
-# filename = 'finalized_model.sav'
-# pickle.dump(clf, open(filename, 'wb'))
- 
-# some time later...
- 
-# load the model from disk
-# loaded_model = pickle.load(open(filename, 'rb'))
-# result = loaded_model.predict(X_test)
-# print(result)
+    return probabilities
+
+def calculate_character_probability(role, questions_so_far, answers_so_far):
+    # Prior
+    P_character = 1 / len(roles)
+
+    # Likelihood
+    P_answers_given_character = 1
+    P_answers_given_not_character = 1
+    for question, answer in zip(questions_so_far, answers_so_far):
+        P_answers_given_character *= max(
+            1 - abs(answer - character_answer(role, question)), 0.01)
+
+        P_answer_not_character = np.mean([1 - abs(answer - character_answer(not_role, question))
+                                          for not_role in characters
+                                          if not_role['role'] != role['role']])
+        P_answers_given_not_character *= max(P_answer_not_character, 0.01)
+
+    # Evidence
+    P_answers = P_character * P_answers_given_character + \
+        (1 - P_character) * P_answers_given_not_character
+
+    # Bayes Theorem
+    P_character_given_answers = (
+        P_answers_given_character * P_character) / P_answers
+
+    return P_character_given_answers
+
+
+def character_answer(character, question):
+    if str(question) in character['answer']:
+        return character['answer'][str(question)]["weight"]
+    return 0.5
+
+def index():
+    global questions_so_far, answers_so_far
+
+    question = request.args.get('question')
+    answer = request.args.get('answer')
+    if question and answer:
+        questions_so_far.append(int(question))
+        answers_so_far.append(float(answer))
+
+    probabilities = calculate_probabilites(questions_so_far, answers_so_far)
+
+    questions_left = list(set(questions.keys()) - set(questions_so_far))
+
+    if len(questions_left) == 0:
+        result = sorted(
+            probabilities, key=lambda p: p['probability'], reverse=True)[0]
+        print(answers_so_far)
+        print(result)
+        #if yes update db
+    else:
+        next_question = random.choice(questions_left)
+        #return render_template('index.html', question=next_question, question_text=questions[next_question])
+

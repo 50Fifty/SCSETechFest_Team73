@@ -62,6 +62,8 @@ def calculate_character_probability(character, questions_so_far, answers_so_far)
 
 
 def character_answer(character, question):
+    print(character["answers"])
+
     if question in character['answers']:
         return character['answers'][question]
     return 0.5
@@ -84,8 +86,8 @@ def index():
     if len(questions_left) == 0:
         result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]
-        print(answers_so_far)
-        print(result)
+     
+        #if yes update db
         return render_template('index.html', result=result['name'])
     else:
         next_question = random.choice(questions_left)

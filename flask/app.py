@@ -37,6 +37,7 @@ def updateML():
     role = "Frontend"
 
     currentWeight = mlTable.get(role)
+    print(currentWeight)
     for ans in ansJson:
         currentWeight['answer'][ans]['times'] += 1
         if(ansJson[ans] != currentWeight['answer'][ans]['weight']):
@@ -44,36 +45,38 @@ def updateML():
         
     mlTable.put(role , currentWeight['answer'])
 
+updateML()
+
 @app.route("/")
 def homepage():
     session["QID"] = 0
     return render_template("index.html")
 
-@app.route("/api/getQuestion", methods=["POST"])
-def getQuestion():
-    # for question in questionTable.get():
-    #     print (question)
+# @app.route("/api/getQuestion", methods=["POST"])
+# def getQuestion():
+#     # for question in questionTable.get():
+#     #     print (question)
 
-    # return {"question" : "abcdef?"}
-    print(session["QID"])
-    response = Response(
-        response=json.dumps(questionTable.get()),
-        response=json.dumps({
-            "question": Sample.Questions[session["QID"]],
-            "questionID": session["QID"]
-        }),
-        mimetype="application/json",
-        status=200
-    )
+#     # return {"question" : "abcdef?"}
+#     print(session["QID"])
+#     response = Response(
+#         response=json.dumps(questionTable.get()),
+#         response=json.dumps({
+#             "question": Sample.Questions[session["QID"]],
+#             "questionID": session["QID"]
+#         }),
+#         mimetype="application/json",
+#         status=200
+#     )
 
-    session["QID"] += 1
+#     session["QID"] += 1
 
-    # response = Response(
-    #     response=json.dumps(db),
-    #     mimetype="application/json",
-    #     status=200
-    # )
-    return response
+#     # response = Response(
+#     #     response=json.dumps(db),
+#     #     mimetype="application/json",
+#     #     status=200
+#     # )
+#     return response
 
 @app.route("/api/receiveAnswer", methods=["POST"])
 def receiveAnswer():
