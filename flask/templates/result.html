@@ -41,7 +41,7 @@
             <td>{{dictionary['job_title']}}</td>
             <td>{{dictionary['company']}}</td>
             <td>{{dictionary['job_description']}}</td>
-            <td>{{dictionary['job_apply_url']}}</td>
+            <td><a href="{{ dictionary['job_apply_url'] }}">{{ dictionary['job_apply_url'] }}</a></td>
             </tr>
           {% endfor %}
         </tbody>
