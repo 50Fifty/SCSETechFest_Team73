@@ -87,7 +87,16 @@ def resultpage():
     #   1.1 Else redirect back to homepage
     # 2. Convert all key and values from strings to integers
     # 3. Pass new dict to model
+    x = scraper(session["career"])
     return render_template("result.html", role=session["career"])
+
+# @app.route("/api/scrape", methods=["POST"])
+# def scrapeJobs():
+#     if "career" in request.get_json():
+#         x = scraper(request.get_json()["career"])
+
+#     else:
+#         return ("Invalid parameters", 400)
 
 @app.route("/api/check", methods=["GET"])
 def check():
