@@ -4,6 +4,7 @@ from MongoDB.question import question
 from MongoDB.userAns import userAns
 from MongoDB.ml import ml
 from test_questions import Sample
+import random
 
 app = Flask(__name__)
 app.secret_key = 'ABCDEFG'
@@ -36,7 +37,7 @@ def updateML():
   }
     role = "Frontend"
 
-    currentWeight = mlTable.get(role)
+    currentWeight = mlTable.get2(role)
     print(currentWeight)
     for ans in ansJson:
         currentWeight['answer'][ans]['times'] += 1
@@ -49,7 +50,9 @@ updateML()
 
 @app.route("/")
 def homepage():
-    session["QID"] = str(1)
+    session.clear()
+    # session["QID"] = str(1)
+    session["qBank"] = [str(x) for x in range(1, len(questionTable.get()["questions"])+1)]
     session["answers"] = dict()
     return render_template("index.html")
 
@@ -61,22 +64,49 @@ def resultpage():
     # 3. Pass new dict to model
     return render_template("result.html", role="Software Engineer")
 
+@app.route("/api/check", methods=["GET"])
+def check():
+    if len(session["qBank"]) == 0:
+        response = Response(
+            response=json.dumps({
+                "completed" : True
+            }),
+            mimetype="application/json",
+            status=200
+        )
+    else:
+        response = Response(
+            response=json.dumps({
+                "completed" : False
+            }),
+            mimetype="application/json",
+            status=200
+        )
+    return response
+    
+
 @app.route("/api/getQuestion", methods=["POST"])
 def getQuestion():
     # for question in questionTable.get():
     #     print (question)
 
     # return {"question" : "abcdef?"}
+    session["QID"] = str(random.choice(session["qBank"]))
     print(session["QID"])
     response = Response(
         # response=json.dumps(questionTable.get()),
         response=json.dumps({
-            "question": Sample.Questions[int(session["QID"])],
+            # "question": Sample.Questions[int(session["QID"])],
+            "question": questionTable.get()["questions"][str(session["QID"])],
             "questionID": str(session["QID"])
         }),
         mimetype="application/json",
         status=200
     )
+    temp = session["qBank"].copy()
+    temp.remove(str(session["QID"]))
+    session["qBank"] = temp
+    print("Questions Left:", len(session["qBank"]))
 
     # response = Response(
     #     response=json.dumps(db),
@@ -89,7 +119,6 @@ def getQuestion():
 def receiveAnswer():
     """
     """
-    print("TEST")
     print(request.get_json())
     if "question" in request.get_json() and "answer" in request.get_json():
         

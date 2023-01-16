@@ -81,6 +81,7 @@
           }
 
           $.ajax({
+            async: false,
             type: "POST",
             url: "/api/receiveAnswer",
             dataType: "json",
@@ -92,10 +93,23 @@
           })
         }
 
+        $.ajax({
+          async: false,
+          type: "GET",
+          url: "/api/check",
+          dataType: "json",
+          success: function(data) {
+            if (data.completed == true) {
+              window.location.replace("/result");
+            }
+          }
+        })
+
         // 2. Get next question
         $("#body-container").fadeOut(function() {
 
           $.ajax({
+            async:false,
             type: "POST",
             url: "/api/getQuestion",
             // data: "id=" + id,
