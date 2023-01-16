@@ -2,7 +2,6 @@ import json
 from MongoDB.question import question
 from MongoDB.userAns import userAns
 from MongoDB.ml import ml
-from test_questions import Sample
 import random
 import numpy as np
 
@@ -19,13 +18,6 @@ def loadRoles():
         roles.append(weights)
 
 loadRoles()
-
-# characters = [
-#     {'name': 'Homer Simpson',         'answers': {1: 1, 2: 1, 3: 1, 4: 0}},
-#     {'name': 'SpongeBob SquarePants', 'answers': {1: 1, 2: 1, 3: 1, 4: 0.75}},
-#     {'name': 'Sandy Cheeks',          'answers': {1: 0, 2: 0, 3: 0}},
-# ]
-# print(characters["name"])
 
 questions = {
     1: 'Is your character yellow?',
