@@ -26,7 +26,7 @@ class ml:
     def get(self):
         return self.db.find()
 
-    def get(self , role):
+    def get2(self , role):
         return self.db.find_one({"role":role})
 
     def create(self,role):
