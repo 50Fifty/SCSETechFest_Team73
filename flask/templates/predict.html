@@ -22,21 +22,47 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <div id="main">
-        <div style="text-align: center; width: 100%; margin-top: 10%; display: flex; flex-direction: row;">
-            <div style="display: block; flex-basis: 100%;">
-                <div style="display: block; margin-bottom: 20px;"><h2 style="font-weight: bold;">Click this if you are a employee</h2></div>
-                <button class="glow-on-hover" style="padding: 40px 30px; width: 50%;" type="button">Can we guess your current career?</button>
-                    
-            </div>
-            <div style="display: block; flex-basis: 100%;">
-                <div style="display: block; margin-bottom: 20px; font-weight: bold;"><h2 style="font-weight: bold;">Click this if you are aspiring job</h2></div>
-                <button class="glow-on-hover" type="button" style="padding: 40px 30px; width: 50%;">Let us decide your career.</button>
-    
-                    
-            </div>
-
-
-        </div>
+      <h2>
+      <div id="one-liner">
+        I want to be a 
+          <div id="changing-keywords">
+            <!-- <strong> -->
+              <b class="hidden">Software Engineer</b><br/>
+              <b class="hidden">Cloud Engineer</b><br/>
+              <b class="hidden">DevOps Engineer</b><br/>
+              <b class="hidden">Cyber Security Engineer</b><br/>
+              <b class="hidden">Site Reliability Engineer</b><br/>
+              <b class="hidden">UI/UX Designer</b>
+            <!-- </strong> -->
+            </h2>
+          </div>
+      </div>
+      </h2>
+      <div id="intro">
+        <h2>Too many career paths in <i>Tech</i> to choose from?</h2>
+        <h2>Get started with our <strong style="color: #ff5a00;">AI-Powered</strong> questionaire!</h2>
+      </div>
+      <div id="body-container">
+        <form id="survey-container" action="javascript:nextQuestion()">
+          <!-- <div id="question-id"></div> -->
+          <div id="question"></div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="yes-radio-btn" value="1" checked>
+            <label class="form-check-label" for="yes-radio-btn">
+              Yes
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="no-radio-btn" value="0">
+            <label class="form-check-label" for="no-radio-btn">
+              No
+            </label>
+          </div>
+          <button class="btn btn-primary" style="float: right;" type="submit">Next</button>
+        </form>
+      </div>
+      <!-- <button onclick="getQuestion()">Click me</button> -->
+      
     </div>
 
     <script>
@@ -55,6 +81,7 @@
           }
 
           $.ajax({
+            async: false,
             type: "POST",
             url: "/api/receiveAnswer",
             dataType: "json",
@@ -66,10 +93,23 @@
           })
         }
 
+        $.ajax({
+          async: false,
+          type: "GET",
+          url: "/api/check",
+          dataType: "json",
+          success: function(data) {
+            if (data.completed == true) {
+              window.location.replace("/result");
+            }
+          }
+        })
+
         // 2. Get next question
         $("#body-container").fadeOut(function() {
 
           $.ajax({
+            async:false,
             type: "POST",
             url: "/api/getQuestion",
             // data: "id=" + id,

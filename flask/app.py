@@ -6,15 +6,12 @@ from MongoDB.ml import ml
 from test_questions import Sample
 import random
 from algo import getNextQuestionOrCareer
-# from scraper import scraper
+from scraper import scraper
 
-<<<<<<< Updated upstream
-x = scraper("ux frontend developer dbs")
-print(x)
-=======
-# scraper("ux frontend developer dbs")
+#x = scraper("ux frontend developer dbs")
+#print(x)
 
->>>>>>> Stashed changes
+
 app = Flask(__name__)
 app.secret_key = 'ABCDEFG'
 questionTable = question()
@@ -59,19 +56,37 @@ def updateML():
 
 @app.route("/")
 def homepage():
+
+    return render_template("index.html")
+
+@app.route("/predict")
+def predictpage():
     session.clear()
     # session["QID"] = str(1)
     session["qBank"] = [str(x) for x in range(1, len(questionTable.get()["questions"])+1)]
     session["answers"] = dict()
-    return render_template("index.html")
+    # 1. Check if session[answers] contains all answers to questions
+    #   1.1 Else redirect back to homepage
+    # 2. Convert all key and values from strings to integers
+    # 3. Pass new dict to model
+    return render_template("predict.html", role="Software sdada")
 
+@app.route("/guess")
+def guesspage():
+    # 1. Check if session[answers] contains all answers to questions
+    #   1.1 Else redirect back to homepage
+    # 2. Convert all key and values from strings to integers
+    # 3. Pass new dict to model
+    return render_template("guess.html", role="Software sdada")
+
+    
 @app.route("/result")
 def resultpage():
     # 1. Check if session[answers] contains all answers to questions
     #   1.1 Else redirect back to homepage
     # 2. Convert all key and values from strings to integers
     # 3. Pass new dict to model
-    return render_template("result.html", role=session["result"])
+    return render_template("result.html", role=session["career"])
 
 @app.route("/api/check", methods=["GET"])
 def check():
@@ -79,11 +94,9 @@ def check():
     questions_so_far = [int(x) for x in list(session["answers"].keys())]
     answers_so_far = [int(x) for x in list(session["answers"].values())]
     result = getNextQuestionOrCareer(questions_so_far, answers_so_far)
-    # result[0] = role
-    # result[1] = probability
     print(result)
     if len(session["qBank"]) == 0 or result[1] > 0.9:
-        session["result"] = result[0]
+        session["career"] = result[0]
         response = Response(
             response=json.dumps({
                 "completed" : True
