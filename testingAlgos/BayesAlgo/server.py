@@ -78,12 +78,14 @@ def index():
         answers_so_far.append(float(answer))
 
     probabilities = calculate_probabilites(questions_so_far, answers_so_far)
-    print("probabilities", probabilities)
 
     questions_left = list(set(questions.keys()) - set(questions_so_far))
+
     if len(questions_left) == 0:
         result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]
+        print(answers_so_far)
+        print(result)
         return render_template('index.html', result=result['name'])
     else:
         next_question = random.choice(questions_left)
