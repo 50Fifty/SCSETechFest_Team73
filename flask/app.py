@@ -8,8 +8,8 @@ import random
 from algo import getNextQuestionOrCareer
 from scraper import scraper
 
-scraper("ux frontend developer dbs")
-
+x = scraper("ux frontend developer dbs")
+print(x)
 app = Flask(__name__)
 app.secret_key = 'ABCDEFG'
 questionTable = question()
