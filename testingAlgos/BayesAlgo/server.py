@@ -82,7 +82,9 @@ def index():
     probabilities = calculate_probabilites(questions_so_far, answers_so_far)
 
     questions_left = list(set(questions.keys()) - set(questions_so_far))
-
+    print(questions_left)
+    print(questions_so_far)
+    print(answers_so_far)
     if len(questions_left) == 0:
         result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]

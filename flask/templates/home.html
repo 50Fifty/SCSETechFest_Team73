@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Find your Tech career today!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="../static/css/fonts.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+  </head>
+  <body onload="firstVisit()">
+    <div id="top" style="text-align: center;">
+      <div id="header" class="typewriter">
+        <h1>
+          <span style="color: #ff5a00;">CSIT</span><span style="color: seashell;">.</span><span style="color: #dcdcaa;">search</span><span style="color: gold;">(</span><span style="color: #50bafe;">career_path</span><span style="color: gold;">)</span>
+        </h1>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <div id="main">
+        <div style="text-align: center; width: 100%; margin-top: 10%; display: flex; flex-direction: row;">
+            <div style="display: block; flex-basis: 100%;">
+                <div style="display: block; margin-bottom: 20px;"><h2 style="font-weight: bold;">Click this if you are a employee</h2></div>
+                <button class="glow-on-hover" style="padding: 40px 30px; width: 50%;" type="button">Can we guess your current career?</button>
+                    
+            </div>
+            <div style="display: block; flex-basis: 100%;">
+                <div style="display: block; margin-bottom: 20px; font-weight: bold;"><h2 style="font-weight: bold;">Click this if you are aspiring job</h2></div>
+                <button class="glow-on-hover" type="button" style="padding: 40px 30px; width: 50%;">Let us decide your career.</button>
+    
+                    
+            </div>
+
+
+        </div>
+    </div>
+
+    <script>
+      function firstVisit() {
+        localStorage.clear();
+        nextQuestion();
+      }
+
+      function nextQuestion() {
+        if ("questionID" in localStorage) {
+
+          // 1. Submit current answer
+          var jsonBody = {
+            "question" : String(document.getElementById("question").textContent),
+            "answer" : String(document.querySelector('input[name="flexRadioDefault"]:checked').value)
+          }
+
+          $.ajax({
+            type: "POST",
+            url: "/api/receiveAnswer",
+            dataType: "json",
+            data: JSON.stringify(jsonBody),
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+              console.log(data.success);
+            }
+          })
+        }
+
+        // 2. Get next question
+        $("#body-container").fadeOut(function() {
+
+          $.ajax({
+            type: "POST",
+            url: "/api/getQuestion",
+            // data: "id=" + id,
+            dataType: "json",
+            success: function(data) {
+              $('#question').text(data.question);
+              localStorage.setItem("questionID", data.questionID);
+            },
+            error: function (req, status, err) {
+              console.log('Something went wrong', status, err);
+            }
+          });
+        });
+
+        // console.log("question id: " + localStorage.getItem("questionID"));
+        $("#body-container").fadeIn();
+      }
+        
+      function printToConsole() {
+        console.log("test");
+      }
+    </script>
+  </body>
+</html>

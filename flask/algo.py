@@ -60,7 +60,7 @@ def calculate_character_probability(role, questions_so_far, answers_so_far):
             1 - abs(answer - character_answer(role, question)), 0.01)
 
         P_answer_not_character = np.mean([1 - abs(answer - character_answer(not_role, question))
-                                          for not_role in characters
+                                          for not_role in role
                                           if not_role['role'] != role['role']])
         P_answers_given_not_character *= max(P_answer_not_character, 0.01)
 
@@ -75,9 +75,9 @@ def calculate_character_probability(role, questions_so_far, answers_so_far):
     return P_character_given_answers
 
 
-def character_answer(character, question):
-    if str(question) in character['answer']:
-        return character['answer'][str(question)]["weight"]
+def character_answer(role, question):
+    if str(question) in role['answer']:
+        return role['answer'][str(question)]["weight"]
     return 0.5
 
 def index():
@@ -92,7 +92,7 @@ def index():
     probabilities = calculate_probabilites(questions_so_far, answers_so_far)
 
     questions_left = list(set(questions.keys()) - set(questions_so_far))
-
+    print(questions_left)
     if len(questions_left) == 0:
         result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]
@@ -104,3 +104,17 @@ def index():
         next_question = random.choice(questions_left)
         #return render_template('index.html', question=next_question, question_text=questions[next_question])
 
+#
+
+
+
+def getNextQuestionOrCareer(questions_left, questions_so_far, answers_so_far):
+    probabilities = calculate_probabilites(questions_so_far, answers_so_far)
+
+    if len(questions_left) == 0:
+        result = sorted(
+            probabilities, key=lambda p: p['probability'], reverse=True)[0]
+        return result["role"]
+    else:
+        next_question = random.choice(questions_left)
+        return next_question
