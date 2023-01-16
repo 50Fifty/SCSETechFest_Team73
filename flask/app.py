@@ -66,7 +66,7 @@ def getQuestion():
     # return {"question" : "abcdef?"}
     print(session["QID"])
     response = Response(
-        response=json.dumps(questionTable.get()),
+        # response=json.dumps(questionTable.get()),
         response=json.dumps({
             "question": Sample.Questions[int(session["QID"])],
             "questionID": str(session["QID"])
