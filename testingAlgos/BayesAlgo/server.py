@@ -2,7 +2,13 @@ from flask import Flask, render_template, request
 # we will need those imports later
 import random
 import numpy as np
-
+import json
+from MongoDB.question import question
+from MongoDB.userAns import userAns
+from MongoDB.ml import ml
+from test_questions import Sample
+import random
+import numpy as np
 #https://medium.com/analytics-vidhya/building-akinator-with-python-using-bayes-theorem-216253c98daa
 
 app = Flask(__name__)

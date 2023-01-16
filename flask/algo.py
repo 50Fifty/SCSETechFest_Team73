@@ -60,7 +60,7 @@ def calculate_character_probability(role, questions_so_far, answers_so_far):
             1 - abs(answer - character_answer(role, question)), 0.01)
 
         P_answer_not_character = np.mean([1 - abs(answer - character_answer(not_role, question))
-                                          for not_role in role
+                                          for not_role in roles
                                           if not_role['role'] != role['role']])
         P_answers_given_not_character *= max(P_answer_not_character, 0.01)
 
@@ -80,29 +80,6 @@ def character_answer(role, question):
         return role['answer'][str(question)]["weight"]
     return 0.5
 
-def index():
-    global questions_so_far, answers_so_far
-
-    question = request.args.get('question')
-    answer = request.args.get('answer')
-    if question and answer:
-        questions_so_far.append(int(question))
-        answers_so_far.append(float(answer))
-
-    probabilities = calculate_probabilites(questions_so_far, answers_so_far)
-    
-    questions_left = list(set(questions.keys()) - set(questions_so_far))
-    print(questions_left)
-    if len(questions_left) == 0:
-        result = sorted(
-            probabilities, key=lambda p: p['probability'], reverse=True)[0]
-        #if yes update db
-        #return render_template('index.html', result=result['name'])
-    else:
-        next_question = random.choice(questions_left)
-        #return render_template('index.html', question=next_question, question_text=questions[next_question])
-
-#
 
 
 
@@ -112,7 +89,8 @@ def getNextQuestionOrCareer(questions_so_far, answers_so_far):
     print(probabilities)
     result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]
-    return result["role"] 
+    print(result)
+    return result["name"], result["probability"]
     
     #     result = sorted(
     #         probabilities, key=lambda p: p['probability'], reverse=True)[0]
@@ -120,3 +98,5 @@ def getNextQuestionOrCareer(questions_so_far, answers_so_far):
     # else:
     #     next_question = random.choice(questions_left)
     #     return next_question
+
+# getNextQuestionOrCareer([1,2,3], [0,0,0])
