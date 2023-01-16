@@ -46,8 +46,17 @@ def updateML():
 
 @app.route("/")
 def homepage():
-    session["QID"] = 0
+    session["QID"] = str(1)
+    session["answers"] = dict()
     return render_template("index.html")
+
+@app.route("/result")
+def resultpage():
+    # 1. Check if session[answers] contains all answers to questions
+    #   1.1 Else redirect back to homepage
+    # 2. Convert all key and values from strings to integers
+    # 3. Pass new dict to model
+    return render_template("result.html", role="Software Engineer")
 
 @app.route("/api/getQuestion", methods=["POST"])
 def getQuestion():
@@ -59,14 +68,12 @@ def getQuestion():
     response = Response(
         response=json.dumps(questionTable.get()),
         response=json.dumps({
-            "question": Sample.Questions[session["QID"]],
-            "questionID": session["QID"]
+            "question": Sample.Questions[int(session["QID"])],
+            "questionID": str(session["QID"])
         }),
         mimetype="application/json",
         status=200
     )
-
-    session["QID"] += 1
 
     # response = Response(
     #     response=json.dumps(db),
@@ -83,11 +90,10 @@ def receiveAnswer():
     print(request.get_json())
     if "question" in request.get_json() and "answer" in request.get_json():
         
-        qn, ans = request.json["question"], request.json["answer"]
-        """
-        TODO
-        Add code here to return question and answer back to model
-        """
+        session["answers"][str(session["QID"])] = request.get_json()["answer"]
+
+        print(session["answers"])
+        session["QID"] = str(int(session["QID"]) + 1)
         return {"success": True}
     else:
         print("inside")
