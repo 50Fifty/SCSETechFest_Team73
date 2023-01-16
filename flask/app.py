@@ -6,15 +6,10 @@ from MongoDB.ml import ml
 from test_questions import Sample
 import random
 from algo import getNextQuestionOrCareer
-# from scraper import scraper
+from scraper import scraper
 
-<<<<<<< Updated upstream
 x = scraper("ux frontend developer dbs")
 print(x)
-=======
-# scraper("ux frontend developer dbs")
-
->>>>>>> Stashed changes
 app = Flask(__name__)
 app.secret_key = 'ABCDEFG'
 questionTable = question()
