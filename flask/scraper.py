@@ -1,13 +1,19 @@
 import pandas as pd 
 from bs4 import BeautifulSoup 
 from selenium.webdriver import Chrome
+from selenium import webdriver
 import re 
 import time
 import json
 import math
 
-path = "\jobstreet\chromedriver_win32"
-driver = Chrome(executable_path=path)
+op = webdriver.ChromeOptions()
+op.add_argument('headless')
+driver = webdriver.Chrome(options=op)
+
+
+# path = "\jobstreet\chromedriver_win32"
+# driver = Chrome(executable_path=path)
 base_url = "https://www.jobstreet.com.sg/en/job-search/{}-jobs/{}/"
 
 def remove_html_tags(text):
@@ -42,7 +48,7 @@ def get_page_number(keyword):
 def job_page_scraper(link):
 
     url = "https://www.jobstreet.com.sg"+link
-    print("scraping...", url)
+    # print("scraping...", url)
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
@@ -100,7 +106,7 @@ def page_crawler(keyword):
     job_links = []
 
     for n in range(page_number):
-        print('Loading page {} ...'.format(n+1))
+        # print('Loading page {} ...'.format(n+1))
         url = base_url.format(keyword, n+1)
         #Load URL
         driver.get(url)
