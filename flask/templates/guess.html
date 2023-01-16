@@ -33,7 +33,7 @@
          <div id="guess_input_wrapper" style="display: none;">
          <h3>Enter your Career</h3>
          <form action="/">
-            <input type="text" id="fname" name="fname" style="color: black;"><br><br>
+            <input type="text" id="roleInput" name="roleInput" style="color: black;"><br><br>
             <button id="guessSubmit" type="button" value="Submit" class="glow-on-hover" style="padding: 10px 3px; width: 10%;" >Submit</button>
           </form>
         </div>
@@ -60,7 +60,23 @@
     });
 
     $('#guessSubmit').click(function(e) {  
-        //handle submit input
+            // 1. Submit current answer
+            var jsonBody = {
+            "role" : $("#roleInput").val()
+            }
+            console.log(jsonBody)
+
+            $.ajax({
+            async: false,
+            type: "POST",
+            url: "/api/updateModel",
+            dataType: "json",
+            data: JSON.stringify(jsonBody),
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+                console.log(data.success);
+            }
+            })
     });
 });
 
