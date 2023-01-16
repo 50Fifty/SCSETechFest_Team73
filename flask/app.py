@@ -88,7 +88,8 @@ def resultpage():
     # 2. Convert all key and values from strings to integers
     # 3. Pass new dict to model
     x = scraper(session["career"])
-    return render_template("result.html", role=session["career"])
+    print(x)
+    return render_template("result.html", role=session["career"], jobs=x)
 
 # @app.route("/api/scrape", methods=["POST"])
 # def scrapeJobs():

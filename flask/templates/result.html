@@ -27,26 +27,23 @@
       <table class="table">
         <thead>
           <tr>
+          <th scope="col">Date Posted</th>
           <th scope="col">Role</th>
           <th scope="col">Company</th>
           <th scope="col">Description</th>
+          <th scope="col">Link</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-          </tr>
-          <tr>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-          </tr>
-          <tr>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
-          </tr>
+          {% for dictionary in jobs %}
+            <tr>
+            <td>{{dictionary['job_post_date']}}</td>
+            <td>{{dictionary['job_title']}}</td>
+            <td>{{dictionary['company']}}</td>
+            <td>{{dictionary['job_description']}}</td>
+            <td>{{dictionary['job_apply_url']}}</td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
