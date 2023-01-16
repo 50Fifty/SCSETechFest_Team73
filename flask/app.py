@@ -135,7 +135,7 @@ def predictpage():
     #   1.1 Else redirect back to homepage
     # 2. Convert all key and values from strings to integers
     # 3. Pass new dict to model
-    return render_template("predict.html", role="Software sdada")
+    return render_template("predict.html")
 
 @app.route("/guess")
 def guesspage():
@@ -143,7 +143,7 @@ def guesspage():
     #   1.1 Else redirect back to homepage
     # 2. Convert all key and values from strings to integers
     # 3. Pass new dict to model
-    return render_template("guess.html", role="Software sdada")
+    return render_template("guess.html", role=session["career"])
 
     
 @app.route("/result")
