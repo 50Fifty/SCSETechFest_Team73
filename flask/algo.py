@@ -90,14 +90,12 @@ def index():
         answers_so_far.append(float(answer))
 
     probabilities = calculate_probabilites(questions_so_far, answers_so_far)
-
+    
     questions_left = list(set(questions.keys()) - set(questions_so_far))
     print(questions_left)
     if len(questions_left) == 0:
         result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]
-        print(answers_so_far)
-        print(result)
         #if yes update db
         #return render_template('index.html', result=result['name'])
     else:
@@ -108,13 +106,17 @@ def index():
 
 
 
-def getNextQuestionOrCareer(questions_left, questions_so_far, answers_so_far):
+def getNextQuestionOrCareer(questions_so_far, answers_so_far):
     probabilities = calculate_probabilites(questions_so_far, answers_so_far)
 
-    if len(questions_left) == 0:
-        result = sorted(
+    print(probabilities)
+    result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]
-        return result["role"]
-    else:
-        next_question = random.choice(questions_left)
-        return next_question
+    return result["role"] 
+    
+    #     result = sorted(
+    #         probabilities, key=lambda p: p['probability'], reverse=True)[0]
+    #     return result["role"]
+    # else:
+    #     next_question = random.choice(questions_left)
+    #     return next_question

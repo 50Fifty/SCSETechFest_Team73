@@ -5,7 +5,7 @@ from MongoDB.userAns import userAns
 from MongoDB.ml import ml
 from test_questions import Sample
 import random
-
+from algo import getNextQuestionOrCareer
 app = Flask(__name__)
 app.secret_key = 'ABCDEFG'
 questionTable = question()
@@ -66,6 +66,11 @@ def resultpage():
 
 @app.route("/api/check", methods=["GET"])
 def check():
+    #questions and answers
+    questions_so_far = [int(x) for x in list(session["answers"].keys())]
+    answers_so_far = [int(x) for x in list(session["answers"].values())]
+    x = getNextQuestionOrCareer(questions_so_far, answers_so_far)
+    print(x)
     if len(session["qBank"]) == 0:
         response = Response(
             response=json.dumps({
