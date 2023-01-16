@@ -8,7 +8,6 @@ class question:
         self.db = dbname["Question List"]
 
     def get(self):
-        print(self.db)
         return self.db.find()
 
     def post(self,newQuestions):

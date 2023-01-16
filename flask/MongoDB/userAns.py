@@ -5,10 +5,9 @@ class userAns:
     def __init__(self):    
 
         dbname = get_database()
-        self.db = dbname["User Ans"]
+        self.db = dbname["User"]
 
     def get(self):
-        print(self.db)
         return self.db.find()
 
     def post(self,newAnswer):
