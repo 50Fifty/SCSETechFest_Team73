@@ -1,2 +1,2 @@
 class Sample:
-    Questions = ["Do you like designing?", "Do you like coding?"]
+    Questions = {1:"Do you like designing?", 2:"Do you like coding?"}

@@ -1,11 +1,32 @@
-from flask import Flask, render_template, request
-# we will need those imports later
+import json
+from MongoDB.question import question
+from MongoDB.userAns import userAns
+from MongoDB.ml import ml
+from test_questions import Sample
 import random
 import numpy as np
 
-#https://medium.com/analytics-vidhya/building-akinator-with-python-using-bayes-theorem-216253c98daa
 
-app = Flask(__name__)
+mlTable = ml()
+
+
+roles = []
+
+def loadRoles():
+    x = mlTable.get()
+    
+    for weights in x:
+        roles.append(weights)
+
+loadRoles()
+
+# characters = [
+#     {'name': 'Homer Simpson',         'answers': {1: 1, 2: 1, 3: 1, 4: 0}},
+#     {'name': 'SpongeBob SquarePants', 'answers': {1: 1, 2: 1, 3: 1, 4: 0.75}},
+#     {'name': 'Sandy Cheeks',          'answers': {1: 0, 2: 0, 3: 0}},
+# ]
+# print(characters["name"])
+
 questions = {
     1: 'Is your character yellow?',
     2: 'Is your character bald?',
@@ -13,41 +34,34 @@ questions = {
     4: 'Is your character short?',
 }
 
-characters = [
-    {'name': 'Homer Simpson',         'answers': {1: 1, 2: 1, 3: 1, 4: 0}},
-    {'name': 'SpongeBob SquarePants', 'answers': {1: 1, 2: 1, 3: 1, 4: 0.75}},
-    {'name': 'Sandy Cheeks',          'answers': {1: 0, 2: 0, 3: 0}},
-]
-
-
 questions_so_far = []
 answers_so_far = []
 
 
 def calculate_probabilites(questions_so_far, answers_so_far):
     probabilities = []
-    for character in characters:
+    for role in roles:
         probabilities.append({
-            'name': character['name'],
-            'probability': calculate_character_probability(character, questions_so_far, answers_so_far)
+            'name': role['role'], #edited
+            'probability': calculate_character_probability(role, questions_so_far, answers_so_far)
         })
 
     return probabilities
 
-def calculate_character_probability(character, questions_so_far, answers_so_far):
+def calculate_character_probability(role, questions_so_far, answers_so_far):
     # Prior
-    P_character = 1 / len(characters)
+    P_character = 1 / len(roles)
 
     # Likelihood
     P_answers_given_character = 1
     P_answers_given_not_character = 1
     for question, answer in zip(questions_so_far, answers_so_far):
         P_answers_given_character *= max(
-            1 - abs(answer - character_answer(character, question)), 0.01)
+            1 - abs(answer - character_answer(role, question)), 0.01)
 
-        P_answer_not_character = np.mean([1 - abs(answer - character_answer(not_character, question))
-                                          for not_character in characters
-                                          if not_character['name'] != character['name']])
+        P_answer_not_character = np.mean([1 - abs(answer - character_answer(not_role, question))
+                                          for not_role in characters
+                                          if not_role['role'] != role['role']])
         P_answers_given_not_character *= max(P_answer_not_character, 0.01)
 
     # Evidence
@@ -62,12 +76,10 @@ def calculate_character_probability(character, questions_so_far, answers_so_far)
 
 
 def character_answer(character, question):
-    if question in character['answers']:
-        return character['answers'][question]
+    if str(question) in character['answer']:
+        return character['answer'][str(question)]["weight"]
     return 0.5
 
-
-@app.route('/')
 def index():
     global questions_so_far, answers_so_far
 
@@ -78,17 +90,17 @@ def index():
         answers_so_far.append(float(answer))
 
     probabilities = calculate_probabilites(questions_so_far, answers_so_far)
-    print("probabilities", probabilities)
 
     questions_left = list(set(questions.keys()) - set(questions_so_far))
+
     if len(questions_left) == 0:
         result = sorted(
             probabilities, key=lambda p: p['probability'], reverse=True)[0]
-        return render_template('index.html', result=result['name'])
+        print(answers_so_far)
+        print(result)
+        #if yes update db
+        #return render_template('index.html', result=result['name'])
     else:
         next_question = random.choice(questions_left)
-        return render_template('index.html', question=next_question, question_text=questions[next_question])
+        #return render_template('index.html', question=next_question, question_text=questions[next_question])
 
-
-if __name__ == '__main__':
-    app.run()
