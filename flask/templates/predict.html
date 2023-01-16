@@ -66,10 +66,12 @@
     </div>
 
     <script>
+
+      let param = null;
     $( document ).ready(function() {
         // var type = "valuefromurl"
         let searchParams = new URLSearchParams(window.location.search)
-        let param = searchParams.get('type')
+        param = searchParams.get('type')
         console.log(param)
     });
 
@@ -107,8 +109,14 @@
           url: "/api/check",
           dataType: "json",
           success: function(data) {
-            if (data.completed == true) {
+
+            if (data.completed == true && param == "predict") {
               window.location.replace("/result");
+            }
+            else {
+              if (data.completed == true && param == "guess") {
+                window.location.replace("/guess");
+              }
             }
           }
         })
