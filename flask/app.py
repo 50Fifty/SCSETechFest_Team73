@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, Response
 import json
+from MongoDB.question import question
+from MongoDB.userAns import userAns
 
 app = Flask(__name__)
+questionTable = question
+userAnsTable = userAns
 
 @app.route("/")
 def homepage():
@@ -9,13 +13,12 @@ def homepage():
 
 @app.route("/api/getQuestion", methods=["POST"])
 def getQuestion():
-    """
-    TODO
-    Add code here to get question.
-    """
+    for question in questionTable.get():
+        print (question)
+
     # return {"question" : "abcdef?"}
     response = Response(
-        response=json.dumps({"question": "abcdefg?"}),
+        response=json.dumps(db),
         mimetype="application/json",
         status=200
     )
