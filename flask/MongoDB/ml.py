@@ -1,4 +1,5 @@
-from MongoDB.get_database import get_database
+#from MongoDB.get_database import get_database
+from get_database import get_database
 
 class ml:
 
@@ -34,4 +35,85 @@ class ml:
     
     def put(self , role , answer):
         self.db.find_one_and_update({'role':role}, { '$set': { "answer" : answer} } )
-        
+
+if __name__ == "__main__":
+    ML = ml()
+
+    data= {
+  "role": "Software Dev",
+  "answer": {   
+        "1": {
+        "weight": 0,
+        "times": 0
+        },
+        "2": {
+        "weight": 1,
+        "times": 0
+        },
+        "3": {
+        "weight": 1,
+        "times": 0
+        },
+        "4": {
+        "weight": 0,
+        "times": 0
+        },
+        "5": {
+        "weight": 0,
+        "times": 0
+        },
+        "6": {
+        "weight": 0,
+        "times": 0
+        },
+        "7": {
+        "weight": 0,
+        "times": 0
+        },
+        "8": {
+        "weight": 0,
+        "times": 0
+        },
+        "9": {
+        "weight": 1,
+        "times": 0
+        },
+        "10": {
+        "weight": 1,
+        "times": 0
+        },
+        "11": {
+        "weight": 1,
+        "times": 0
+        },
+        "12": {
+        "weight": 0,
+        "times": 0
+        },
+        "13": {
+        "weight": 0,
+        "times": 0
+        },
+        "14": {
+        "weight": 1,
+        "times": 0
+        },
+        "15": {
+        "weight": 1,
+        "times": 0
+        },
+        "16": {
+        "weight": 0,
+        "times": 0
+        },
+        "17": {
+        "weight": 0,
+        "times": 0
+        },
+        "18": {
+        "weight": 0,
+        "times": 0
+        }
+    }
+    }
+    ML.create(data)
